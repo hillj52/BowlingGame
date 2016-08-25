@@ -20,9 +20,26 @@ public class SimulatedBowling {
 			for (int j=0;j<10;j++) {
 				currFrame = bowlingSeries[i][j];
 				if (currFrame.isStrike()) {
-					frameScores[i][j] = 15;
+					frameScores[i][j] = 10;
+					if (currFrame.getIsTenth()) {
+						frameScores[i][j] += currFrame.getTotalTenthBonus();
+					} else if (j==8 && bowlingSeries[i][j+1].isStrike()){
+						frameScores[i][j] += 10 + bowlingSeries[i][j+1].getFirstBonus();
+					} else {
+						if (bowlingSeries[i][j+1].isStrike()) {
+							frameScores[i][j] += 10;
+							frameScores[i][j] += bowlingSeries[i][j+2].getFirstBall();
+						} else {
+							frameScores[i][j] += bowlingSeries[i][j+1].get2BallTotal();
+						}
+					}
 				} else if (currFrame.isSpare()) {
-					frameScores[i][j] = 12;
+					frameScores[i][j] = 10;
+					if(currFrame.getIsTenth()) {
+						frameScores[i][j] += currFrame.getFirstBonus();
+					} else {
+						frameScores[i][j] += bowlingSeries[i][j+1].getFirstBall();
+					}
 				} else {
 					frameScores[i][j] = currFrame.getFirstBall() + currFrame.getSecondBall();
 				}
@@ -47,8 +64,9 @@ public class SimulatedBowling {
 	}
 	
 	public String toString() {
-		int total;
-		String sb = "Frames	 1   2   3   4   5   6   7   8   9   10   Total\n";
+		int total = 0;
+		int totalSeries = 0;
+		String sb = "Frames	 1   2   3   4   5   6   7   8   9   10   Total\n\n";
 		for (int i=0;i<3;i++) {
 			total = 0;
 			sb += "Game " + (i+1) + "  ";
@@ -71,7 +89,9 @@ public class SimulatedBowling {
 				}
 			}
 			sb += " " + total + "\n";
+			totalSeries += total;
 		}
+		sb += "\nTotal Series                                      " + totalSeries + "\n";
 		return sb;
 	}
 	public SimulatedBowling() {
@@ -130,6 +150,10 @@ class Frame {
 		else {return true;}
 	}
 	
+	public int get2BallTotal() {
+		return this.getFirstBall() + this.getSecondBall();
+	}
+	
 	public void calcTenthBonus() {
 		if (this.isStrike()) {
 			this.tenthBonus[0] = getPinsDowned();
@@ -144,6 +168,14 @@ class Frame {
 		} else {
 			this.tenthBonus[0] = 0;
 		}
+	}
+	
+	public int getTotalTenthBonus() {
+		return this.tenthBonus[0] + this.tenthBonus[1];
+	}
+	
+	public int getFirstBonus() {
+		return this.tenthBonus[0];
 	}
 	
 	public void bowlOneBall() {
