@@ -76,13 +76,13 @@ public class SimulatedBowling {
 			sb += "\n        ";
 			for (int j=0;j<10;j++) {
 				total += frameScores[i][j];
-				sb += frameScores[i][j] + "";
+				sb += total + "";
 				if (j==9) {
 					sb += "  ";
 				}
-				if (frameScores[i][j] >= 100) {
+				if (total >= 100) {
 					sb += "|";
-				} else if (frameScores[i][j] >= 10) {
+				} else if (total >= 10) {
 					sb += " |";
 				} else {
 					sb += "  |";
