@@ -91,7 +91,7 @@ public class SimulatedBowling {
 			sb += " " + total + "\n";
 			totalSeries += total;
 		}
-		sb += "\nTotal Series                                      " + totalSeries + "\n";
+		sb += "\nTotal Series                                       " + totalSeries + "\n";
 		return sb;
 	}
 	public SimulatedBowling() {
